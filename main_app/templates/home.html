@@ -1,0 +1,32 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="home__favorites">
+    {% for favorite in favorites %}
+
+        <div class="favorite mb-5">
+            <h3 class="title is-3 has-text-success">{{favorite.title}}</h3>
+            <hr />
+
+            {% for collection in favorite.collections.all %}
+
+                <div class="collection">
+                    <span>{{forloop.counter}}</span>
+                    <span><b>{{collection.title}}</b></span>
+                    <span>{{collection.get_length}}</span>
+                    <!--   Here we are creating an anchor tag that when clicked will hit our new route and send a query to remove the song     -->
+                    <a href="{% url 'favorites_collection_assoc' favorites.pk collection.pk %}?assoc=remove"
+                    class="button is-danger is-outlined">
+                     <span class="icon is-small">
+                         <i class="fas fa-times"></i>
+                     </span>
+                 </a>
+             </span>
+                </div>
+
+            {% endfor %}
+        </div>
+    {% empty %} 
+        <div class="favorite mb-5">"There are no collections in this favorite"</div>
+    {% endfor %}
+</div>
+{% endblock %}

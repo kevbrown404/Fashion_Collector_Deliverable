@@ -1,0 +1,111 @@
+{% extends 'base.html' %} 
+{% block content %}
+<div class="detail__img">
+    <img src="{{brand.img}}" alt="{{brand.name}}" />
+</div>
+<div class="detail__name">
+    {% if brand.verified_brand %}
+    <div class="icon-text">
+        <span class="icon has-text-info">
+            <i class="fas fa-check-circle"></i>
+        </span>
+        <span>Verified</span>
+    </div>
+    {% endif %}
+    <h1 class="title">{{brand.name}}</h1>
+</div>
+<div class="detail__container">
+    <div class="buttons">
+        <a href="{% url 'brand_update' brand.pk %}" class="button is-info"> Updates
+            <span class="icon">
+                <i class="fas fa-edit"></i>
+            </span>
+        </a>
+        <a href="{% url 'brand_delete' brand.pk %}" class="button is-danger">Delete
+
+            <span class="icon">
+                <i class="fas fa-trash-alt"></i>
+            </span>
+        </a>
+    <!-- inside detail collections element below the header -->
+
+<!-- Here you can see the action we provided
+    is to the collection_create route with the brand pk -->
+    <form class="mb-5" action="{% url 'collection_create' brand.pk %}" method="post">
+        {% csrf_token %}
+        <div class="field has-addons">
+            <div class="control">
+                <input
+                    class="input"
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input
+                    class="input"
+                    type="number"
+                    name="length"
+                    placeholder="Length in Seconds"
+                    min="1"
+                    required
+                />
+            </div>
+            <div class="control">
+                <input class="button is-primary" type="submit" value="Add Collection" />
+            </div>
+        </div>
+    </form>
+    
+    <!-- before the for loop for collections -->
+
+        <!-- inside container -->
+  <div class="detail__collections mb-5">
+    <h3 class="title is-3">Collections</h3>
+
+    {% for colletion in brand.collections.all %}
+    <div class="collection">
+      <span>{{forloop.counter}}</span>
+      <span><b>{{collection.title}}</b></span>
+      <span>{{collection.length}}</span>
+      <span>
+        <div class="dropdown">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span>Add to Favorite</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    {% for favorite in favorites %}
+                        <a href="{% url 'favorite_collection_assoc' favorite.pk collection.pk %}?assoc=add"
+                           class="dropdown-item">{{ favorite.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </span>
+    </div>
+		{% empty %}
+    <article class="message">
+      <div class="message-header">
+        <p>No Collections Available</p>
+      </div>
+    </article>
+
+    {% endfor %}
+  </div>
+<!--  above about section  -->
+    </div>
+    <div class="detail__about">
+        <h4 class="title is-4">About</h4>
+        <p>{{brand.bio}}</p>
+    </div>
+</div>
+
+{% endblock %}
